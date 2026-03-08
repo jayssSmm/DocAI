@@ -7,9 +7,17 @@
 {% block body %}
     <form method="post">
         <label for="input">Enter prompt:</label>
-        <input type="text" name="prompt" autocomplete="off" id='input' placeholder="Explain pythagoras formula">
-        <button>Submit</button>
+        <input type="text" name="prompt" autocomplete="off" id='input' autofocus placeholder="Explain pythagoras formula">
+        <button>Ask AI</button>
     </form>
-    <p>{{ data }}</p>
+    <p></p>
+    {% if data %}
+        <p>{{ data }}</p>
+    {% endif %}
+    
+    <script>
+        document.querySelector('button').addEventListener('click',()=>{
+            document.querySelector('p').textContent='Thinking..'
+        })
+    </script>
 {% endblock %}
-
