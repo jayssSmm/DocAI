@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block body %}
+    <form method="post">
+        <label for="input">Enter prompt:</label>
+        <input type="text" name="prompt" autocomplete="off" id='input' placeholder="Explain pythagoras formula">
+        <button>Submit</button>
+    </form>
+    <p>{{ data }}</p>
+{% endblock %}
+
