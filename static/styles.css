@@ -1,0 +1,19 @@
+body{
+    background-color: #1f2937;
+    font-family: sans-serif;
+    color:white;
+}
+
+button{
+    background-color:#3882f6;
+    color: white;
+    border-radius: 4px;
+    border: white solid 2px;
+}
+
+form{
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    align-items: center;
+}

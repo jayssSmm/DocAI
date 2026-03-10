@@ -6,11 +6,13 @@ client=OpenAI(
     api_key=os.getenv('GROQ_API_KEY')
 )
 
-def response(prompt,message):
+def response(prompt,chat_history):
     try:
+        messages=list(chat_history)
+        messages.append({'role':'user','content':prompt})
         result=client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            messages=[{'role':'user','content':prompt}]+message,
+            messages=messages,
         )
         return result.choices[0].message.content 
     except Exception as e:

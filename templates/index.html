@@ -5,19 +5,29 @@
 {% endblock %}
 
 {% block body %}
-    <form method="post">
-        <label for="input">Enter prompt:</label>
+    <h1>AI</h1>
+    <form method="post" id="ai-form">
+        <label for="input">Enter Prompt : </label>
         <input type="text" name="prompt" autocomplete="off" id='input' autofocus placeholder="Explain pythagoras formula">
-        <button>Ask AI</button>
+        <button id="submit">Ask AI</button>
     </form>
-    <p></p>
-    {% if data %}
-        <p>{{ data }}</p>
-    {% endif %}
+
+    <p id="status">{{ data if data else '' }}</p>
     
     <script>
-        document.querySelector('button').addEventListener('click',()=>{
-            document.querySelector('p').textContent='Thinking..'
+        const form=document.querySelector('#ai-form')
+        const submitButton=document.querySelector('#submit')
+        const status=document.querySelector('#status')
+
+        window.addEventListener('pageshow',()=>{
+            submitButton.disabled=false
+        })
+
+        form.addEventListener('submit',()=>{
+            if (status){
+                status.textContent='Thinking..'
+            }
+            submitButton.disabled=true
         })
     </script>
 {% endblock %}
