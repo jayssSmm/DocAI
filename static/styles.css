@@ -18,3 +18,18 @@ form{
     gap: 1rem;
     align-items: center;
 }
+
+#drop-zone{
+    width: 90vw;
+    border:#3882f6 solid 1px;
+    height: 20vw;
+    margin: 1rem;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+p{
+    text-align: center;
+}
