@@ -25,11 +25,12 @@ def index():
         prompt=request.form.get('prompt')
         model=request.form.get('model')
 
-        cache_key_groq=[r.hgetall(i) for i in r.lrange('chat_history_groq',0,-1)]
+        cache_key_groq=[r.hgetall(i) for i in r.lrange('cache_groq',0,-1)]
         cache_groq=list(filter(lambda x:x['prompt']==prompt,cache_key_groq))
+
                         
-        cache_key_gemini=[i for i in r.lrange('chat_history_gemini',0,-1)]
-        cache_gemini=filter(lambda x:x['prompt']==prompt,cache_key_gemini)
+        cache_key_gemini=[r.hgetall(i) for i in r.lrange('chat_history_gemini',0,-1)]
+        cache_gemini=list(filter(lambda x:x['prompt']==prompt,cache_key_gemini))
 
         try:
             if model=='Groq':
@@ -41,24 +42,25 @@ def index():
                         for i in r.lrange('chat_history_groq',0,-1)
                         ]
                     response=groq_provider.response(prompt,chat_history)
-
+                    
                     r.hset(f'message:{n_groq}',mapping={'role':'assistant','content':response,'prompt':prompt})
+                    r.expire(f'message:{n_groq}',300)
                     r.lpush('chat_history_groq',f'message:{n_groq}')
-
                     n_groq+=1
+                    
                     
             elif model=='Gemini':
                 if cache_gemini:
                     response=cache_gemini[0]['parts']
                 else:
                     chat_history=[
-                        {k:v for k,v in i.hgetall().items() if k in ['role','parts']}
+                        {k:list(v) for k,v in i.hgetall().items() if k in ['role','parts']}
                         for i in r.lrange('chat_history_gemini',0,-1)
                     ]
                     response=gemini_provider.response(prompt,chat_history)
 
-                    r.hset(f'message:{n_gemini}',mapping={'role':'model','parts':[response],'prompt':prompt})
-                    r.expire(300)
+                    r.hset(f'message:{n_gemini}',mapping={'role':'model','parts':response,'prompt':prompt})
+                    r.expire(f'message:{n_gemini}',300)
                     r.lpush('chat_history_gemini',f'message:{n_gemini}')
 
                     n_gemini+=1
@@ -72,5 +74,9 @@ def index():
 
 @app.route('/clear')
 def clear():
+    global n_groq
+    global n_gemini
+    n_groq=1
+    n_gemini=1
     r.flushall()
     return redirect('/')
