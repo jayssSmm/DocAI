@@ -6,6 +6,10 @@
 
 {% block body %}
     <h1>AI</h1>
+        <div id="drop-zone">
+        Drag & Drop files here
+        <input type="file" hidden>
+    </div>
     <form method="post" id="ai-form">
         <label for="input">Enter Prompt : </label>
         <input type="text" name="prompt" autocomplete="off" id='input' autofocus placeholder="Explain pythagoras formula">

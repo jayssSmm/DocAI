@@ -10,3 +10,4 @@ aiForm.addEventListener('submit',()=>{
 window.addEventListener('pageshow',()=>{
     submitBtn.disabled=false
 })
+
