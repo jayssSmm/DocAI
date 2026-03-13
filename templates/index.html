@@ -18,20 +18,5 @@
 
     <p id="status">{{ data if data else '' }}</p>
     
-    <script>
-        const form=document.querySelector('#ai-form')
-        const submitButton=document.querySelector('#submit')
-        const status=document.querySelector('#status')
-
-        window.addEventListener('pageshow',()=>{
-            submitButton.disabled=false
-        })
-
-        form.addEventListener('submit',()=>{
-            if (status){
-                status.textContent='Thinking..'
-            }
-            submitButton.disabled=true
-        })
-    </script>
+    <script src="../static/upload.js"></script>
 {% endblock %}
