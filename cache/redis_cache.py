@@ -1,10 +1,9 @@
 import hashlib
-import json
 import re
 import redis
 
 # ── Redis connection ──────────────────────────────────────────────────────────
-redis_client = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
+r= redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
 CACHE_TTL = 60 * 60 * 24  # 24 hours
 
 # ── Stateful trigger patterns ─────────────────────────────────────────────────
@@ -39,14 +38,7 @@ _STATEFUL_RE = [re.compile(p, re.IGNORECASE) for p in STATEFUL_PATTERNS]
 
 
 def is_stateful(prompt: str) -> bool:
-    """
-    Return True when a prompt is context-dependent and should NOT be cached.
 
-    A prompt is stateful when:
-      • it matches a known follow-up pattern, OR
-      • it is very short (≤ 4 words) with no clear standalone subject
-        (short prompts almost always refer to the previous exchange)
-    """
     stripped = prompt.strip()
 
     # Very short prompts are almost always references to prior context
@@ -66,88 +58,39 @@ def is_stateful(prompt: str) -> bool:
 
 
 def make_cache_key(prompt: str) -> str:
-    """Deterministic Redis key derived from the normalised prompt text."""
+
     normalised = prompt.strip().lower()
     digest = hashlib.sha256(normalised.encode()).hexdigest()
-    return f"llm:cache:{digest}"
+    return digest
 
 
 def get_cached_response(prompt: str) -> str | None:
-    """
-    Return a cached LLM response for *stateless* prompts, or None.
-    Stateful prompts always return None (skip cache look-up entirely).
-    """
+
     if is_stateful(prompt):
         return None  # never cache context-dependent prompts
 
     key = make_cache_key(prompt)
-    raw = redis_client.get(key)
+    raw = r.exists(key)
     if raw:
-        data = json.loads(raw)
-        return data.get("response")
+        return r.get(key)
     return None
 
 
 def set_cached_response(prompt: str, response: str) -> bool:
-    """
-    Persist a prompt→response pair only when the prompt is stateless.
-    Returns True if the value was cached, False if it was skipped.
-    """
+
     if is_stateful(prompt):
         return False  # silently skip stateful prompts
 
     key = make_cache_key(prompt)
-    payload = json.dumps({"prompt": prompt, "response": response})
-    redis_client.setex(key, CACHE_TTL, payload)
+    r.set(key,response)
+    r.expire(key,CACHE_TTL)
+    
     return True
-
-
-# ── Flask integration helper ──────────────────────────────────────────────────
-
-def get_llm_response(prompt: str, llm_call_fn) -> dict:
-    """
-    Drop-in helper for Flask route handlers.
-
-    Usage:
-        from smart_cache import get_llm_response
-
-        @app.route("/chat", methods=["POST"])
-        def chat():
-            prompt = request.json["prompt"]
-            result = get_llm_response(prompt, call_my_llm)
-            return jsonify(result)
-
-    `llm_call_fn` must be a callable that accepts a prompt string and returns
-    the LLM response string, e.g.:
-        def call_my_llm(prompt: str) -> str:
-            ...
-
-    Returns a dict:
-        {
-            "response": "<llm text>",
-            "cached":   True | False,   # whether the result came from cache
-            "stored":   True | False    # whether this response was newly cached
-        }
-    """
-    stateful = is_stateful(prompt)
-
-    # 1. Try cache (only for stateless prompts)
-    if not stateful:
-        cached = get_cached_response(prompt)
-        if cached:
-            return {"response": cached, "cached": True, "stored": False}
-
-    # 2. Call the real LLM
-    response = llm_call_fn(prompt)
-
-    # 3. Persist if stateless
-    stored = set_cached_response(prompt, response)
-
-    return {"response": response, "cached": False, "stored": stored}
 
 
 # ── Quick self-test ───────────────────────────────────────────────────────────
 if __name__ == "__main__":
+    # the test is written by ai
     test_cases = [
         # (prompt, expected_stateful)
         ("Explain Newton's laws in 1 line", False),
