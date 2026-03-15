@@ -41,12 +41,10 @@ def is_stateful(prompt: str) -> bool:
 
     stripped = prompt.strip()
 
-    # 1️⃣ explicit pattern detection
     for pattern in _STATEFUL_RE:
         if pattern.search(stripped):
             return True
 
-    # 2️⃣ short ambiguous prompts
     words = stripped.split()
     word_count = len(words)
 
