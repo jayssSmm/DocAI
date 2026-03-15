@@ -1,3 +1,5 @@
 .env
 .venv/
-deepseek_provider.py
+api/deepseek_provider.py
+__pycache__/
+*.pyc

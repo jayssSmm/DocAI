@@ -41,17 +41,17 @@ def is_stateful(prompt: str) -> bool:
 
     stripped = prompt.strip()
 
-    # Very short prompts are almost always references to prior context
-    word_count = len(stripped.split())
-    if word_count <= 4:
-        # Allow short but self-contained prompts like "What is DNA?"
-        if not re.search(r"\b(what|who|when|where|why|how|define|explain|describe)\b",
-                         stripped, re.IGNORECASE):
-            return True
-
-    # Check against all stateful patterns
+    # 1️⃣ explicit pattern detection
     for pattern in _STATEFUL_RE:
         if pattern.search(stripped):
+            return True
+
+    # 2️⃣ short ambiguous prompts
+    words = stripped.split()
+    word_count = len(words)
+
+    if word_count <= 3:
+        if any(w in ["it", "this", "that", "those"] for w in words):
             return True
 
     return False

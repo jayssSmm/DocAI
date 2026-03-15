@@ -24,7 +24,6 @@ def index():
         prompt=request.form.get('prompt')
         model=request.form.get('model')
 
-        cache_key_groq=[r.hgetall(i) for i in r.lrange('cache_groq',0,-1)]
         cache_groq=redis_cache.get_cached_response(prompt)
         try:
             if model=='Groq':
@@ -33,8 +32,9 @@ def index():
                 else:
                     chat_history=[
                         {k:v for k,v in r.hgetall(i).items() if k in ['role','content']}
-                        for i in r.lrange('chat_history_groq',0,-1)
+                        for i in r.lrange('chat_history_groq',0,10)
                         ]
+                    print(chat_history)
                     response=groq_provider.response(prompt,chat_history)
                     
                     #the code below handles history, that will be send to llm as assistant
@@ -44,8 +44,8 @@ def index():
                     n_groq+=1
 
                     #the code below sets cache
-                    redis_cache.set_cached_response(prompt,response)
-                    if False:
+                    raw = redis_cache.set_cached_response(prompt,response)
+                    if raw:
                         print("Error: data not cached / statefull prompt")
 
             return render_template('index.html',data=response)
