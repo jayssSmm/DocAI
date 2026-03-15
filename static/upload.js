@@ -20,7 +20,7 @@ dropZone.addEventListener('dragover', (e)=>{
 })
 
 dropZone.addEventListener('drop', (e)=>{
-    const dropData=e.dataTransfer.files()
+    const dropData=e.dataTransfer.files
     dataHandler(dropData)
 })
 
@@ -29,20 +29,25 @@ dropZone.addEventListener('click', (e)=>{
 })
 
 dropBox.addEventListener('change', (e)=>{
-    dataHandler(dropBox.files)
+    dataHandler(e.target.files)
 })
 
 dropBox.addEventListener('paste', (e)=>{
-    const pasteData=e.clipboardData.items()
+    const pasteData=e.clipboardData.files
     dataHandler(pasteData)
 })
 
-function dataHandler(data){
+function dataHandler(files){
     const formData = new FormData()
-    formData.append("data", data)
+    
+    for (let i = 0; i < files.length; i++) {
+        formData.append("file", files[i])
+    }
 
     fetch("/upload", {
     method: "POST",
     body: formData
     })
+    .then (response=>response.json())
+    .then (data=>alert(data.message))
 }

@@ -1,7 +1,9 @@
 from flask import Flask,render_template,request,redirect
 from api import groq_provider
 from cache import redis_cache
+import os
 import redis
+from werkzeug.utils import secure_filename
 
 app=Flask(__name__)
 app.secret_key = "new2_random_string_here"
@@ -62,5 +64,12 @@ def clear():
     r.flushall()
     return redirect('/')
 
-@app.route('/upload')
+@app.route('/upload',methods=['POST'])
 def upload_files():
+    if 'file' not in request.files:
+        return {'message': 'Error: No file part'}, 400
+    file = request.files['file']
+    if file.filename == '':
+        return {'message': 'Error: No selected file'}, 400
+    file.save(os.path.join('uploads', file.filename))
+    return {'message': f'File {file.filename} uploaded successfully'}
