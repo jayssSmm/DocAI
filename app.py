@@ -62,5 +62,5 @@ def clear():
     r.flushall()
     return redirect('/')
 
-@app.roue('/upload')
+@app.route('/upload')
 def upload_files():
