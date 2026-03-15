@@ -2,3 +2,4 @@
 .venv/
 api/deepseek_provider.py
 __pycache__/
+*.pyc
