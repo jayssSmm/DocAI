@@ -1,5 +1,6 @@
 from flask import Flask,render_template,request,redirect
 from api import groq_provider
+from cache import redis_cache
 import redis
 
 app=Flask(__name__)
@@ -12,6 +13,7 @@ r = redis.Redis(
 )
 
 n_groq=1
+HISTORY_TTL = 60 * 60 * 24  # 24 hours
 
 @app.route('/', methods=['GET','POST'])
 def index():
@@ -22,24 +24,29 @@ def index():
         prompt=request.form.get('prompt')
         model=request.form.get('model')
 
-        cache_key_groq=[r.hgetall(i) for i in r.lrange('cache_groq',0,-1)]
-        cache_groq=list(filter(lambda x:x['prompt']==prompt,cache_key_groq))
-
+        cache_groq=redis_cache.get_cached_response(prompt)
         try:
             if model=='Groq':
                 if cache_groq:
-                    response=cache_groq[0]['content']
+                    response=cache_groq
                 else:
                     chat_history=[
                         {k:v for k,v in r.hgetall(i).items() if k in ['role','content']}
-                        for i in r.lrange('chat_history_groq',0,-1)
+                        for i in r.lrange('chat_history_groq',0,10)
                         ]
+                    print(chat_history)
                     response=groq_provider.response(prompt,chat_history)
                     
+                    #the code below handles history, that will be send to llm as assistant
                     r.hset(f'message:{n_groq}',mapping={'role':'assistant','content':response,'prompt':prompt})
-                    r.expire(f'message:{n_groq}',300)
+                    r.expire(f'message:{n_groq}',HISTORY_TTL)
                     r.lpush('chat_history_groq',f'message:{n_groq}')
                     n_groq+=1
+
+                    #the code below sets cache
+                    raw = redis_cache.set_cached_response(prompt,response)
+                    if raw:
+                        print("Error: data not cached / statefull prompt")
 
             return render_template('index.html',data=response)
         except Exception as e:
