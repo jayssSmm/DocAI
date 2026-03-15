@@ -1,6 +1,5 @@
 from flask import Flask,render_template,request,redirect
 from api import groq_provider
-from api import gemini_provider
 import redis
 
 app=Flask(__name__)
@@ -13,12 +12,10 @@ r = redis.Redis(
 )
 
 n_groq=1
-n_gemini=1
 
 @app.route('/', methods=['GET','POST'])
 def index():
     global n_groq
-    global n_gemini
 
     if request.method=='POST':
 
@@ -27,10 +24,6 @@ def index():
 
         cache_key_groq=[r.hgetall(i) for i in r.lrange('cache_groq',0,-1)]
         cache_groq=list(filter(lambda x:x['prompt']==prompt,cache_key_groq))
-
-                        
-        cache_key_gemini=[r.hgetall(i) for i in r.lrange('chat_history_gemini',0,-1)]
-        cache_gemini=list(filter(lambda x:x['prompt']==prompt,cache_key_gemini))
 
         try:
             if model=='Groq':
@@ -47,23 +40,6 @@ def index():
                     r.expire(f'message:{n_groq}',300)
                     r.lpush('chat_history_groq',f'message:{n_groq}')
                     n_groq+=1
-                    
-                    
-            elif model=='Gemini':
-                if cache_gemini:
-                    response=cache_gemini[0]['parts']
-                else:
-                    chat_history=[
-                        {k:list(v) for k,v in i.hgetall().items() if k in ['role','parts']}
-                        for i in r.lrange('chat_history_gemini',0,-1)
-                    ]
-                    response=gemini_provider.response(prompt,chat_history)
-
-                    r.hset(f'message:{n_gemini}',mapping={'role':'model','parts':response,'prompt':prompt})
-                    r.expire(f'message:{n_gemini}',300)
-                    r.lpush('chat_history_gemini',f'message:{n_gemini}')
-
-                    n_gemini+=1
 
             return render_template('index.html',data=response)
         except Exception as e:
@@ -75,8 +51,9 @@ def index():
 @app.route('/clear')
 def clear():
     global n_groq
-    global n_gemini
     n_groq=1
-    n_gemini=1
     r.flushall()
     return redirect('/')
+
+@app.roue('/upload')
+def upload_files():
