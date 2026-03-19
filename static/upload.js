@@ -41,6 +41,7 @@ dropBox.addEventListener('paste', (e)=>{
 function dataHandler(files){
 
     const maxSize=10*1024*1024
+    arrFile=[]
 
     for (let i=0;i<files.length;i++){
         let currentFile=files[i]
@@ -48,16 +49,19 @@ function dataHandler(files){
             alert('File size Exceeds 10MB limit')
             return
         }else{
-            uploadFile(files[i])
+            arrFile.push(files[i])
         }
     }
+    uploadFile(arrFile)
 }
 
-function uploadFile(file){
+function uploadFile(arrFile){
     const formData = new FormData()
 
-    formData.append("file", file)
-
+    for (let i=0;i<arrFile.length;i++){
+        formData.append("file", arrFile[i])
+    }
+    
     fetch("/upload", {
     method: "POST",
     body: formData
