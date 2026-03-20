@@ -5,7 +5,10 @@ r = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
 CACHE_TTL = 60 * 60 * 24  # 24 hours
 
 def make_hash_file(file):
-    return hashlib.file_digest(file, 'sha256').hexdigest()
+    file.seek(0)
+    hash_val = hashlib.file_digest(file, 'sha256').hexdigest()
+    file.seek(0)
+    return hash_val
 
 def set_cache_file(file,response):
 

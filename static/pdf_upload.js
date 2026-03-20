@@ -10,7 +10,7 @@ dropZone.addEventListener('dragover', (e)=>{
 
 dropZone.addEventListener('drop', (e)=>{
     e.preventDefault()
-    const dropData=e.dataTransfer.files
+    const dropData=e.dataTransfer.files[0]
     dataHandler(dropData)
 })
 
@@ -19,37 +19,33 @@ dropZone.addEventListener('click', (e)=>{
 })
 
 dropBox.addEventListener('change', (e)=>{
-    dataHandler(e.target.files)
+    dataHandler(e.target.files[0])
 })
 
 dropBox.addEventListener('paste', (e)=>{
-    const pasteData=e.clipboardData.files
+    const pasteData=e.clipboardData.files[0]
     dataHandler(pasteData)
 })
 
-function dataHandler(files){
+function dataHandler(file){
 
     const maxSize=10*1024*1024
-    let arrFile=[]
 
-    for (let i=0;i<files.length;i++){
-        let currentFile=files[i]
-        if (currentFile.size>maxSize){
-            alert('File size Exceeds 10MB limit')
-            return
-        }else{
-            arrFile.push(files[i])
-        }
+    if (file.size>maxSize){
+        alert('File size Exceeds 10MB limit')
+        return
+     }else{
+        uploadFile(file)
     }
-    uploadFile(arrFile)
 }
 
-function uploadFile(arrFile){
+function uploadFile(file){
+
+    alert('All Files Uploaded successfully')
+    statusEle.textContent='Thinking..'
     const formData = new FormData()
 
-    for (let i=0;i<arrFile.length;i++){
-        formData.append("file", arrFile[i])
-    }
+    formData.append("file", file)
     
     fetch("/upload", {
     method: "POST",
