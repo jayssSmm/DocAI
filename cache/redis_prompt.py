@@ -3,7 +3,7 @@ import re
 import redis
 
 # ── Redis connection ──────────────────────────────────────────────────────────
-r= redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
+r = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
 CACHE_TTL = 60 * 60 * 24  # 24 hours
 
 # ── Stateful trigger patterns ─────────────────────────────────────────────────
@@ -68,9 +68,9 @@ def get_cached_response(prompt: str) -> str | None:
         return None  # never cache context-dependent prompts
 
     key = make_cache_key(prompt)
-    raw = r.exists(key)
+    raw = r.hexists('cache_history_groq',key)
     if raw:
-        return r.get(key)
+        return r.hget('cache_history_groq',key)
     return None
 
 
@@ -80,8 +80,8 @@ def set_cached_response(prompt: str, response: str) -> bool:
         return False  # silently skip stateful prompts
 
     key = make_cache_key(prompt)
-    r.set(key,response)
-    r.expire(key,CACHE_TTL)
+    r.hset('cache_history_groq',key,response)
+    r.expire('cache_history_groq',CACHE_TTL)
     
     return True
 
