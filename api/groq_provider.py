@@ -8,7 +8,6 @@ client=OpenAI(
 
 def response(prompt,chat_history:list):
     try:
-        chat_history=chat_history[::-1]
         chat_history.append({'role':'user','content':prompt})
         
         result=client.chat.completions.create(
