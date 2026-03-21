@@ -7,7 +7,6 @@ r = redis.Redis(
 )
 
 HISTORY_TTL = 60 * 60 * 24  # 24 hours
-DEFAULT_ID=1
 
 def set_history(obj,msg_id=None):
 
@@ -24,5 +23,4 @@ def set_history(obj,msg_id=None):
     
 
 def get_last_ten_messages(n:int=10):
-    print(list(map(lambda x:r.hget(x,'content'), r.lrange("chat_history_groq",-n,-1))))
-    return list(map(lambda x:r.hget(x,'content'), r.lrange("chat_history_groq",-n,-1)))
+    return list(map(lambda x:r.hgetall(x), r.lrange("chat_history_groq",-n,-1)))
