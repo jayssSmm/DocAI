@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  backend:
+    build: .
+    ports:
+      - "7000:7000"
+    environment:
+      GROQ_API_KEY: ${GROQ_API_KEY}
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7
+    container_name: redis_server
+    ports:
+      - "6379:6379"
