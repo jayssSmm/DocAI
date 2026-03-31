@@ -2,7 +2,6 @@ openai
 gunicorn
 dotenv
 flask
-eventlet>=0.40.3
 youtube_transcript_api
 redis
 pymupdf
