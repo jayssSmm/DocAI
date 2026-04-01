@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block title %}StudyMind AI | Login{% endblock %}
+
+{% block body %}
+<div class="login-container">
+    <form id="login-form">
+        <div class="form-header">Login</div>
+        
+        <div class="form-row">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username">
+        </div>
+        
+        <div class="form-row">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password">
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit">Sign In</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
