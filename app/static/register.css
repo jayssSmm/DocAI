@@ -107,6 +107,10 @@ h1 {
     color: white;
     font-size: 1rem;
     transition: all 0.2s ease;
+
+    width: 100%;           /* Ensures the blue box fills the group */
+    display: block;
+    box-sizing: border-box;
 }
 
 .input-group input:focus {
@@ -198,11 +202,14 @@ h1 {
 /* Side-by-side password fields for desktop */
 .input-row {
     display: flex;
-    gap: 1rem;
+    flex-direction: column; /* This is the "Magic" line */
+    gap: 1.25rem;           /* Adds space between the two password sections */
+    width: 100%;            /* Keeps it within the card */
 }
 
+/* 2. Ensure the groups and inputs take up the full available width */
 .input-row .input-group {
-    flex: 1;
+    width: 100%;
 }
 
 /* Terms and Conditions styling */
@@ -227,10 +234,9 @@ h1 {
 }
 
 /* Responsive fix for small screens */
-@media (max-width: 400px) {
+@media (min-width: 480px) {
     .input-row {
-        flex-direction: column;
-        gap: 1.25rem;
+        flex-direction: column; /* Keep it as a column even on desktop if you prefer */
     }
 }
 

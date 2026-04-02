@@ -1,4 +1,4 @@
-from flask import Blueprint,request,render_template,jsonify,make_response,redirect
+from flask import Blueprint,request,render_template,make_response,redirect,url_for,flash
 from app.extensions import db
 from flask_jwt_extended import create_access_token
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -15,18 +15,22 @@ def login():
     password = request.form.get('password', '')
 
     if not email or not password:
-        return jsonify({'error': 'Email and password are required'}), 400
+        flash('Email and password are required.', 'error')
+        return redirect(url_for('auth.login'))
 
     user = db.session.execute(
-        db.select(user).filter_by(email=email)
+        db.select(User).filter_by(email=email)
     ).scalar_one_or_none()
 
     if not user or not check_password_hash(user.password_hash, password):
-        return jsonify({'error': 'Invalid credentials'}), 401
+        flash('Email and password are required.', 'error')
+        return redirect(url_for('auth.login'))
 
     access_token = create_access_token(identity=str(user.id))
 
-    response=make_response(redirect('/'),200)
+    response=redirect(url_for('main.index'))
+
+    flash('Log In successful!', 'success')
     response.set_cookie('access_token_cookie',access_token,httponly=True)
 
     return response
@@ -38,6 +42,18 @@ def register():
     
     email = request.form.get('email', '').strip().lower()
     password = request.form.get('password', '')
+
+    if not email or not password:
+        flash('Email and password are required.', 'error')
+        return redirect(url_for('auth.register'))
+    
+    existing_user = db.session.execute(
+        db.select(User).filter_by(email=email)
+    ).scalar_one_or_none()
+
+    if existing_user:
+        flash('Email already registered. Try another', 'error')
+        return redirect(url_for('auth.register'))
     
     new_user = User(email=email, password_hash=generate_password_hash(password))
     db.session.add(new_user)
@@ -45,7 +61,8 @@ def register():
 
     access_token = create_access_token(identity=str(new_user.id))
 
-    response=make_response(redirect('/'),200)
+    response=redirect(url_for('main.index'))
+    flash('Registration successful!', 'success')
     response.set_cookie('access_token_cookie',access_token,httponly=True)
 
     return response
