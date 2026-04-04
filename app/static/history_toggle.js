@@ -39,11 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isActive){
             removeSessionFromHistory()
-            let response = await fetch('/session');
+            let response = await fetch('/session',{credentials: 'include'});
+            if (!response.ok) {
+            console.error('Failed to fetch sessions:', response.status);
+            return;
+            };
             let sessions = await response.json();
             for (let session of sessions){
                 addSessionToHistory(session.title)
             };
         };
     }
+
 });
