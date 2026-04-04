@@ -9,8 +9,6 @@ bp=Blueprint('session_extract',__name__)
 @bp.route('/session')
 @jwt_required()
 def get_user_session():
-
-    print("JWT identity:", get_jwt_identity())
     
     try:
         user_id=get_jwt_identity()

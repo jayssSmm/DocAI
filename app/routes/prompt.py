@@ -4,6 +4,7 @@ from app.history import redis_history
 from app.services.yt_services import transcript_extractor
 from app.services.llm_services import groq_provider
 from app.services.session_services import new_session
+from app.services.message_services import message_add
 from flask_jwt_extended import jwt_required,get_jwt_identity
 
 bp=Blueprint('prompt',__name__)
@@ -49,8 +50,9 @@ def prompt():
             redis_text.set_cached_response(prompt,response) 
             redis_history.set_history(response)   
             
-            #code below handles db
-
+            #code below handles messages to db
+            message_add.add_message(session_id,'user',prompt)
+            message_add.add_message(session_id,'assistant',response)
                 
             return {'message':response, 'session_id':session_id}
 
