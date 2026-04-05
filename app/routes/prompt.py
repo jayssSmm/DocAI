@@ -1,5 +1,5 @@
 from flask import Blueprint,request
-from app.services.cache_services import redis_text
+from app.services.llm_cache_services import redis_text
 from app.history import redis_history
 from app.services.yt_services import transcript_extractor
 from app.services.llm_services import groq_provider
