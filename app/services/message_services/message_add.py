@@ -1,6 +1,6 @@
 from app.extensions import db
 from app.models.messages import Message
-from app.services.cache_services import redis_text
+from app.services.llm_cache_services import redis_text
 
 def add_message(session_id,role,content):
     is_statefull = redis_text.is_stateful(content)

@@ -1,8 +1,8 @@
 from flask import Blueprint,request
-from app.services.cache_services import redis_pdf
+from app.services.llm_cache_services import redis_pdf
 from app.services.pdf_services import text_based_extraction as tpdf
 from app.services.llm_services import groq_provider
-from app.history import redis_history
+from app.services.session_cache_services import redis_history
 
 bp=Blueprint("upload",__name__)
 
