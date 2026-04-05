@@ -9,7 +9,10 @@
 {% block body %}
 <div class="app-container">
 
-    <button id="history-toggle" class="history-btn">🕒 View History</button>
+    <nav class="nav-actions">
+        <button id="history-toggle" class="history-btn">🕒 View History</button>
+        <a href="/login" class="login-btn">👤 Login</a>
+    </nav>
 
     <header class="hero">
         <div class="logo">StudyMind<span>AI</span></div>
@@ -75,5 +78,4 @@
 <script src="../static/text_upload.js" type="module"></script>
 <script src="../static/pdf_upload.js" type="module"></script>
 <script src="../static/history_toggle.js"></script>
-<script src="../static/session_handle.js"></script>
 {% endblock %}

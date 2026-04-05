@@ -3,6 +3,13 @@ import { marked } from 'https://cdn.jsdelivr.net/npm/marked/+esm'
 const statusEle=document.getElementById('status')
 const aiForm=document.getElementById('ai-form')
 const submitBtn=document.getElementById('submit')
+const newSessBtn = document.getElementById('new-session-btn')
+
+let session_id = null
+
+newSessBtn.addEventListener('click',()=>{
+    session_id = null
+})
 
 aiForm.addEventListener('submit',(e)=>{
 
@@ -15,8 +22,6 @@ aiForm.addEventListener('submit',(e)=>{
     const model=document.getElementById('model').value
 
     document.getElementById('input').value=''
-
-    let session_id=null
 
     fetch('/prompt',{
         method:'POST',
@@ -33,6 +38,7 @@ aiForm.addEventListener('submit',(e)=>{
     .then (data=>{
         statusEle.innerHTML = marked.parse(data.message)
         session_id = data.session_id
+        console.log(session_id)
     })
     .finally(()=>{
         submitBtn.disabled=false

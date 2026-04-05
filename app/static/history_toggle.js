@@ -14,12 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
     closeBtn.addEventListener('click', toggleSidebar);
     overlay.addEventListener('click', toggleSidebar);
 
-    function addSessionToHistory(title) {
+    function addSessionToHistory(title, id) {
         const list = document.getElementById('sessions-list');
         const placeholder = list.querySelector('.placeholder');
         if (placeholder) placeholder.remove();
 
         const item = document.createElement('div');
+        item.dataset.id = id
         item.className = 'session-item';
         item.textContent = title || "New Conversation";
         
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             let sessions = await response.json();
             for (let session of sessions){
-                addSessionToHistory(session.title)
+                addSessionToHistory(session.title, session.id)
             };
         };
     }

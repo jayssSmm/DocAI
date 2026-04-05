@@ -231,28 +231,6 @@ h1 {
     color: var(--text-main);
 }
 
-/* --- History Button (Trigger) --- */
-.history-btn {
-    background: rgba(51, 65, 85, 0.4);
-    color: var(--text-main);
-    border: 1px solid var(--border);
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 1.5rem;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.history-btn:hover {
-    background: var(--border);
-    border-color: var(--text-muted);
-}
-
 /* --- Sessions List --- */
 .sessions-list {
     overflow-y: auto;
@@ -357,4 +335,60 @@ h1 {
     color: var(--text-muted);
     margin: 0 0 1rem 0.5rem;
     font-weight: 700;
+}
+
+.nav-actions {
+    display: flex;
+    justify-content: space-between; /* Pushes one left, one right */
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.history-btn, 
+.login-btn {
+    /* Reset defaults */
+    background: rgba(51, 65, 85, 0.4); /* Transparent slate */
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none; /* Removes underline from <a> */
+    
+    /* Alignment */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    
+    /* Remove any existing margins that might break alignment */
+    margin: 0 !important; 
+}
+
+/* --- Shared Hover Effect --- */
+.history-btn:hover, 
+.login-btn:hover {
+    background: var(--border);
+    border-color: var(--text-muted);
+    transform: translateY(-1px);
+    color: var(--text-main);
+}
+
+/* --- Active/Click State --- */
+.history-btn:active, 
+.login-btn:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 400px) {
+    .nav-actions {
+        gap: 0.5rem;
+    }
+    .history-btn, .login-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
 }
