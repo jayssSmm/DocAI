@@ -17,6 +17,7 @@ class Message(db.Model):
 
     def to_dict(self):
         return {
+            "id": self.id,
             "session_id": self.session_id,
             "role":self.role,
             "content": self.content,
