@@ -39,7 +39,7 @@ def create_app():
 
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=5)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=5)
     app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
 
     db.init_app(app)
