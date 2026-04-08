@@ -15,3 +15,5 @@ def get_last_ten_messages(session_id,n:int=10):
     key = f'session_id:{session_id}:messages'
     raw = r.lrange(key, -n, -1)
     return [json.loads(m) for m in raw]
+
+# project url, publishable key, direct sconnection string, cli setup command, which one should i choose?

@@ -7,8 +7,8 @@ from flask import jsonify
 
 load_dotenv()
 
-db = SQLAlchemy()
 jwt = JWTManager()
+db = SQLAlchemy()
 
 database_url = os.getenv("DATABASE_URL")
 redis_url = os.getenv("REDIS_URL")

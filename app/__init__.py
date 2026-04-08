@@ -4,6 +4,7 @@ from app.routes.prompt import bp as prompt_bp
 from app.routes.uploads import bp as upload_bp
 from app.routes.auth import bp as authorise_bp
 from app.routes.session_extractor import bp as session_extractor_bp
+from app.routes.ping import bp as ping_bp
 from app.extensions import db 
 from app.extensions import jwt
 from app.models.sessions import Session
@@ -21,6 +22,7 @@ def create_app():
     app.secret_key = "ss@//42"
 
     app.register_blueprint(main_bp)
+    app.register_blueprint(ping_bp)
     app.register_blueprint(prompt_bp)
     app.register_blueprint(upload_bp)
     app.register_blueprint(authorise_bp)
@@ -33,13 +35,15 @@ def create_app():
         "max_overflow": 10,
         "pool_timeout": 30,
         "pool_recycle": 1800,
+        "pool_pre_ping": True,
+        "connect_args": {"sslmode": "require"},
     }
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
     app.config['JWT_COOKIE_CSRF_PROTECT'] = False
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=5)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=5)
     app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
 
     db.init_app(app)
