@@ -11,8 +11,8 @@ graceful_timeout=30
 max_request=1000
 max_request_jitter=50
 
-accesslog='gunicorn_access.log'
-errorlog='gunicorn_error.log'
+accesslog='-'
+errorlog='-'
 loglevel='info'
 
 bind = f"0.0.0.0:{os.environ.get('PORT', 10000)}"
