@@ -179,16 +179,17 @@ h1 {
     top: 0;
     left: 0;
     width: 320px;
+    /* Use max-width to ensure it never exceeds the screen width on tiny phones */
+    max-width: 85vw; 
     height: 100vh;
     background: var(--card-bg);
     border-right: 1px solid var(--border);
-    z-index: 2000; /* Higher than overlay */
-    padding: 1.5rem;
+    z-index: 2000;
+    padding: 1rem; /* Slightly reduced padding for mobile */
     display: flex;
     flex-direction: column;
     box-shadow: var(--shadow);
     
-    /* Hidden State */
     transform: translateX(-100%); 
     visibility: hidden;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
@@ -206,29 +207,39 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0 1rem 0;
     border-bottom: 1px solid var(--border);
+    /* Keeps header elements tight */
+    flex-shrink: 0; 
 }
 
 .sidebar-header h3 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.1rem; /* Slightly smaller for mobile */
     color: var(--text-main);
+    white-space: nowrap;
 }
 
 #close-sidebar {
-    background: transparent;
+    background: #334155; /* Add a subtle background to make it a clear target */
     border: none;
-    color: var(--text-muted);
-    font-size: 1.8rem;
-    line-height: 1;
+    color: var(--text-main);
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: background 0.2s;
+    /* Prevents the button from being squashed */
+    flex-shrink: 0; 
 }
 
 #close-sidebar:hover {
-    color: var(--text-main);
+    background: var(--border);
 }
 
 /* --- Sessions List --- */
@@ -390,5 +401,11 @@ h1 {
     .history-btn, .login-btn {
         padding: 0.5rem 0.8rem;
         font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 280px; /* Narrower sidebar for small phones */
     }
 }
