@@ -3,8 +3,9 @@ from app.services.llm_cache_services import redis_pdf
 from app.services.pdf_services import text_based_extraction as tpdf
 from app.services.llm_services import groq_provider
 from app.services.session_cache_services import redis_history
-from app.services.session_services import session_handler
+from app.services.session_services import session_handler,new_session
 from app.services.guest_services import too_many_request
+from app.services.message_services import message_add
 from flask_jwt_extended import jwt_required,get_jwt_identity,verify_jwt_in_request
 import json
 
@@ -25,6 +26,7 @@ def upload_files():
         user_id = None
 
     is_guest = user_id is None
+    session_id = request.form.get('session_id')
 
     if is_guest:
         req = too_many_request.guest_limit_reached(guest_id)
@@ -36,7 +38,6 @@ def upload_files():
         session_id = guest_id
     
     file = request.files.get('file')
-    session_id = json.loads(session_id)
 
     if file.filename=='':
         return {'message': 'Error: No selected file'}, 400
@@ -47,13 +48,22 @@ def upload_files():
         if cache_pdf:
             return {'message':cache_pdf}
         else:
-            chat_history=session_handler.get_redis_history(session_id,is_guest,data)
-
             r = tpdf.text_extraction(file)
+            data = {"role":"user","content":r}
+
+            if session_id=="null" and not is_guest:
+                session_id = new_session.create_new_session(user_id, r)
+
+            chat_history=session_handler.get_redis_history(session_id,is_guest,data)
+            
             pdf_response=groq_provider.response(r,chat_history)
                 
             redis_pdf.set_cache_file(file,pdf_response)
-            redis_history.set_history(pdf_response)
+            redis_history.set_history(session_id,"assistant",pdf_response)
+
+            if not is_guest:
+                message_add.add_message(session_id,'user',r)
+                message_add.add_message(session_id,'assistant',pdf_response)
 
             return {'message':pdf_response}
         
