@@ -26,6 +26,7 @@ let session_id = null
 document.addEventListener('DOMContentLoaded', () => {
     newSessBtn.addEventListener('click',()=>{
         session_id = null
+        statusEle.textContent='Waiting for your prompt...'
         sidebar.classList.toggle('active');
         overlay.classList.toggle('active');
 

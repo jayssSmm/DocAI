@@ -7,6 +7,8 @@ const statusEle=document.getElementById('status')
 const guestId = localStorage.getItem("guest_id") || crypto.randomUUID()
 localStorage.setItem("guest_id", guestId)
 
+let session_id = null
+
 dropZone.addEventListener('dragover', (e)=>{
     e.preventDefault()
 })
@@ -30,6 +32,20 @@ dropBox.addEventListener('paste', (e)=>{
     dataHandler(pasteData)
 })
 
+document.addEventListener('DOMContentLoaded', () => {
+    sessList.addEventListener('click', (e)=>{
+        const item = e.target.closest('.session-item');
+
+        if (item) {
+            session_id = item.dataset.id; 
+
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.getElementById('input').focus();
+        }
+    })
+})
+
 function dataHandler(file){
 
     const maxSize=10*1024*1024
@@ -51,6 +67,7 @@ function uploadFile(file){
     const formData = new FormData()
 
     formData.append("file", file)
+    formData.append('session_id', JSON.stringify(session_id))
     
     fetch("/upload", {
     method: "POST",

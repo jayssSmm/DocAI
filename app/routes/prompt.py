@@ -7,6 +7,7 @@ from app.services.session_services import new_session
 from app.services.message_services import message_add
 from app.services.guest_services import too_many_request
 from flask_jwt_extended import jwt_required,get_jwt_identity,verify_jwt_in_request
+
 bp=Blueprint('prompt',__name__)
 
 @bp.route('/prompt', methods=['POST'])
