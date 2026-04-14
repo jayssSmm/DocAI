@@ -1,5 +1,5 @@
 import { marked } from 'https://cdn.jsdelivr.net/npm/marked/+esm'
-import { sendPrompt } from './text_upload'
+import { sendPrompt } from './text_upload.js'
 
 const statusEle=document.getElementById('status')
 const aiForm=document.getElementById('ai-form')
@@ -8,8 +8,7 @@ const submitBtn=document.getElementById('submit')
 const newSessBtn = document.getElementById('new-session-btn')
 const sidebar = document.getElementById('history-sidebar');
 const overlay = document.getElementById('sidebar-overlay');
-
-const sessList = document.getElementById('sessions-list')
+const sessList=document.getElementById('sessions-list')
 
 function getGuestId() {
     const existing = localStorage.getItem("guest_id")
@@ -20,9 +19,9 @@ function getGuestId() {
     return newId
 }
 
-const guestId = getGuestId()
+export const guestId = getGuestId()
 
-let session_id = null
+export let session_id = null
 
 document.addEventListener('DOMContentLoaded', () => {
     newSessBtn.addEventListener('click',()=>{

@@ -1,4 +1,6 @@
 import { marked } from 'https://cdn.jsdelivr.net/npm/marked/+esm'
+import { session_id } from './main_llm.js'
+import { guestId } from './main_llm.js'
 
 const dropZone=document.getElementById('drop-zone')
 const dropBox=document.getElementById('drop-box')
