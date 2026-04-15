@@ -1,6 +1,7 @@
 import hashlib
 import re
 from app.extensions import redis_client as r
+import string
 
 CACHE_TTL = 60 * 60 * 24  # 24 hours
 
@@ -49,6 +50,16 @@ def is_stateful(prompt: str) -> bool:
     if word_count <= 3:
         if any(w in ["it", "this", "that", "those"] for w in words):
             return True
+    if word_count <= 3:
+        if any(w in (string.ascii_letters + string.digits) for w in words):
+            return True
+    if word_count <= 3:
+        try:
+            if any(int(w) for w in words):
+                return True
+        except:
+            pass
+            
 
     return False
 

@@ -1,8 +1,31 @@
-from services.yt_services import transcript_extractor
+import string
 
-a=input("link = ")
-yt_link = transcript_extractor.extract_video_id(a)
-rest = transcript_extractor.extract_rest_prompt(a)
-print(yt_link)
-print(rest)
-#print(transcript_extractor.get_transcript(a))
+def is_stateful(prompt: str) -> bool:
+
+    stripped = prompt.strip()
+
+    '''for pattern in _STATEFUL_RE:
+        if pattern.search(stripped):
+            return True'''
+
+    words = stripped.split()
+    word_count = len(words)
+
+    if word_count <= 3:
+        if any(w in ["it", "this", "that", "those"] for w in words):
+            return True
+    if word_count <= 3:
+        if any(w in (string.ascii_letters + string.digits) for w in words):
+            return True
+    if word_count <= 3:
+        try:
+            if any(int(w) for w in words):
+                return True
+        except:
+            pass
+            
+
+    return False
+
+a=input("a= ")
+print(is_stateful(a))
