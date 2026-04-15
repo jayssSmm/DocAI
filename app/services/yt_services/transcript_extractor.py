@@ -11,6 +11,13 @@ def extract_video_id(url):
         return url.split("v=")[-1].split("&")[0].split("?")[0]
     return url
 
+def extract_rest_prompt(prompt):
+    if "youtu.be" in prompt:
+        return " ".join(prompt.split("/")[-1].split("?")[1].split()[1:])
+    elif "youtube.com" in prompt:
+        return " ".join(prompt.split("v=")[-1].split("&")[0].split("?")[1].split()[1:])
+    return prompt
+
 
 def get_transcript(url: str) -> dict:
     video_id = extract_video_id(url)

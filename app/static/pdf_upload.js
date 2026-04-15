@@ -1,6 +1,7 @@
 import { marked } from 'https://cdn.jsdelivr.net/npm/marked/+esm'
 import { session_id } from './main_llm.js'
 import { guestId } from './main_llm.js'
+import { setSessionId } from './main_llm.js'
 
 const dropZone=document.getElementById('drop-zone')
 const dropBox=document.getElementById('drop-box')
@@ -71,7 +72,10 @@ function uploadFile(file){
         return response.json()
     })
     .then (data=>{
-        const cleaned = data.message.replace(/\n{3,}/g, '\n\n');
+        const cleaned = data.message
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
         statusEle.innerHTML=marked.parse(cleaned)
+        setSessionId(data.session_id)
     })
 }

@@ -19,6 +19,10 @@ function getGuestId() {
     return newId
 }
 
+export function setSessionId(newId){
+    session_id = newId;
+}
+
 export const guestId = getGuestId()
 
 export let session_id = null
@@ -59,8 +63,11 @@ aiForm.addEventListener('submit', async (e) => {
 
     sendPrompt({ prompt, model, session_id, guestId })
     .then(data => {
-      statusEle.innerHTML = marked.parse(data.message);
-      session_id = data.session_id;
+        const cleaned = data.message
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+        statusEle.innerHTML = marked.parse(cleaned);
+        session_id = data.session_id;
     })
     .finally(() => {
       submitBtn.disabled = false;
