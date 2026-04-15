@@ -1,6 +1,7 @@
 openai
 gunicorn
 dotenv
+requests
 flask
 youtube_transcript_api
 redis

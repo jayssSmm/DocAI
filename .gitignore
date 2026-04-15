@@ -9,3 +9,5 @@ gunicorn_access.log
 .vscode/
 prompts/
 migrations/
+test.py
+cookies.txt
