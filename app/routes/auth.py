@@ -26,7 +26,7 @@ def login():
         flash('Email and password are required.', 'error')
         return redirect(url_for('auth.login'))
 
-    access_token = create_access_token(identity=str(user.id))
+    access_token = create_access_token(identity=str(user.user_id))
 
     response=redirect(url_for('main.index'))
 
@@ -59,7 +59,7 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    access_token = create_access_token(identity=str(new_user.id))
+    access_token = create_access_token(identity=str(new_user.user_id))
 
     response=redirect(url_for('main.index'))
     flash('Registration successful!', 'success')
