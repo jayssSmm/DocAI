@@ -1,9 +1,9 @@
 from app.extensions import db
 from sqlalchemy import func
-import uuid
+from sqlalchemy.dialects.postgresql import UUID
 
 class Message(db.Model):
-    id = db.Column(uuid, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True,server_default=db.text("gen_random_uuid()"))
     session_id = db.Column(db.Integer, db.ForeignKey('session.id', ondelete='CASCADE'), nullable=False)
     role = db.Column(db.String(20), nullable=False)
     content = db.Column(db.String, nullable=False)

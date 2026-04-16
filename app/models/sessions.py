@@ -1,6 +1,6 @@
 from app.extensions import db
 from sqlalchemy import func
-import uuid
+from sqlalchemy.dialects.postgresql import UUID
 
 class Session(db.Model):
     __tablename__ = "session"
@@ -8,8 +8,8 @@ class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     user_id = db.Column(
-        uuid,
-        db.ForeignKey("users.id", ondelete="CASCADE"),
+        UUID(as_uuid=True),
+        db.ForeignKey("users.user_id", ondelete="CASCADE"),
         nullable=False
     )
 
