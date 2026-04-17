@@ -419,3 +419,140 @@ h1 {
         width: 280px; /* Narrower sidebar for small phones */
     }
 }
+
+
+
+
+/* ─── Input Mode Indicator ──────────────────────────────────────────────── */
+.input-modes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0 1rem;
+    flex-wrap: wrap;
+}
+ 
+.mode-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.65rem 1.1rem;
+    border-radius: 12px;
+    border: 1.5px solid var(--border-color, #e0e0e0);
+    background: var(--card-bg, #fff);
+    cursor: default;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    min-width: 110px;
+    text-align: center;
+}
+ 
+.mode-pill .mode-icon   { font-size: 1.3rem; line-height: 1; }
+.mode-pill .mode-label  { font-size: 0.8rem; font-weight: 600; color: var(--text-primary, #111); }
+.mode-pill .mode-desc   { font-size: 0.68rem; color: var(--text-muted, #888); }
+ 
+.mode-pill.active {
+    border-color: var(--accent, #4f46e5);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #4f46e5) 15%, transparent);
+    transform: translateY(-2px);
+}
+ 
+.mode-pill.active .mode-label { color: var(--accent, #4f46e5); }
+ 
+.mode-divider {
+    font-size: 0.72rem;
+    color: var(--text-muted, #aaa);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+}
+ 
+/* ─── Upload card improvements ──────────────────────────────────────────── */
+.upload-card {
+    transition: border-color 0.2s, background 0.2s;
+}
+ 
+.upload-card.drag-over {
+    border-color: var(--accent, #4f46e5);
+    background: color-mix(in srgb, var(--accent, #4f46e5) 5%, var(--card-bg, #fff));
+}
+ 
+.upload-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0.4rem 0 0.2rem;
+}
+ 
+.upload-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted, #888);
+}
+ 
+/* ─── File badge ────────────────────────────────────────────────────────── */
+.file-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: color-mix(in srgb, var(--accent, #4f46e5) 8%, var(--card-bg, #fff));
+    border: 1.5px solid color-mix(in srgb, var(--accent, #4f46e5) 35%, transparent);
+    border-radius: 8px;
+    padding: 0.45rem 0.8rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-primary, #111);
+}
+ 
+.file-badge.hidden { display: none; }
+ 
+.file-badge-icon { font-size: 1rem; }
+ 
+.file-badge-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+ 
+.file-badge-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-muted, #888);
+    line-height: 1;
+    padding: 0 0.1rem;
+    transition: color 0.15s;
+}
+.file-badge-remove:hover { color: #e53e3e; }
+ 
+/* ─── YouTube hint ──────────────────────────────────────────────────────── */
+.yt-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: #c00;
+    font-weight: 500;
+    margin: -0.25rem 0 0.4rem 0.1rem;
+    animation: fadeIn 0.2s ease;
+}
+ 
+.yt-hint.hidden { display: none; }
+ 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+ 
+/* ─── Feature icons ─────────────────────────────────────────────────────── */
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+ 
+.feature-icon { font-size: 1rem; }
+.feature-text { font-size: 0.85rem; }
+ 
