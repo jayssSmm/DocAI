@@ -1,14 +1,9 @@
+
 {% extends 'layout.html' %}
-
 {% block title %}StudyMind AI | Master Your Learning{% endblock %}
-
-{% block style %}<link rel="stylesheet"  href="../static/home.css">{% endblock %}
-
-
-
+{% block style %}<link rel="stylesheet" href="../static/home.css">{% endblock %}
 {% block body %}
 <div class="app-container">
-
     <nav class="nav-actions">
         <button id="history-toggle" class="history-btn">🕒 View History</button>
         <a href="/login" class="login-btn">👤 Login</a>
@@ -17,7 +12,7 @@
     <header class="hero">
         <div class="logo">StudyMind<span>AI</span></div>
         <h1>Study Smarter, Not Harder</h1>
-        <p class="subtitle">Your AI-powered assistant for notes, PDFs, and instant learning.</p>
+        <p class="subtitle">Upload a PDF, paste a YouTube link, or just ask — your AI study assistant handles all three.</p>
     </header>
 
     <aside id="history-sidebar" class="sidebar">
@@ -38,24 +33,62 @@
     <div id="sidebar-overlay" class="overlay"></div>
 
     <main class="main-content">
-        <div id="drop-zone" class="upload-card">
-            <div class="upload-icon">📄</div>
-            <p>Drop your PDF, Notes, or Text here</p>
-            <span>or click to browse files</span>
-            <input id="drop-box" name='file' type="file" hidden>
+
+        <!-- Input mode indicator -->
+        <div class="input-modes">
+            <div class="mode-pill mode-pdf" id="mode-pdf">
+                <span class="mode-icon">📄</span>
+                <span class="mode-label">PDF Upload</span>
+                <span class="mode-desc">Drop or click to attach</span>
+            </div>
+            <div class="mode-divider">or</div>
+            <div class="mode-pill mode-yt" id="mode-yt">
+                <span class="mode-icon">▶</span>
+                <span class="mode-label">YouTube Link</span>
+                <span class="mode-desc">Paste a video URL below</span>
+            </div>
+            <div class="mode-divider">or</div>
+            <div class="mode-pill mode-text" id="mode-text">
+                <span class="mode-icon">✏️</span>
+                <span class="mode-label">Ask Anything</span>
+                <span class="mode-desc">Type your question below</span>
+            </div>
         </div>
 
+        <!-- PDF drop zone -->
+        <div id="drop-zone" class="upload-card">
+            <div class="upload-icon">📄</div>
+            <p class="upload-title">Drop your PDF here</p>
+            <span class="upload-hint">or <u>click to browse</u> — we'll read and summarize it for you</span>
+            <input id="drop-box" name='file' type="file" hidden accept=".pdf">
+        </div>
+
+        <!-- Uploaded file badge (shown after upload) -->
+        <div id="file-badge" class="file-badge hidden">
+            <span class="file-badge-icon">📄</span>
+            <span id="file-badge-name" class="file-badge-name"></span>
+            <button id="file-badge-remove" class="file-badge-remove" title="Remove file">&times;</button>
+        </div>
+
+        <!-- Chat input -->
         <form method="post" id="ai-form" class="chat-input-group">
             <div class="input-wrapper">
-                <input type="text" name="prompt" autocomplete="off" id='input' autofocus 
-                       placeholder="Ask anything, upload notes, or paste a link...">
+                <input type="text" name="prompt" autocomplete="off" id='input' autofocus
+                       placeholder="Ask a question, or paste a YouTube link...">
                 <select name="model" id="model">
                     <option value="Groq" selected>M01</option>
                 </select>
             </div>
+
+            <!-- YouTube detection hint -->
+            <div id="yt-hint" class="yt-hint hidden">
+                <span>▶</span> YouTube link detected — I'll extract insights from this video
+            </div>
+
             <button id="submit">Ask AI</button>
         </form>
 
+        <!-- Response -->
         <section class="response-container">
             <div class="response-header">
                 <span class="bot-icon">🤖</span> AI Response
@@ -65,14 +98,27 @@
             </div>
         </section>
 
+        <!-- What you can do -->
         <section class="features-grid">
-            <div class="feature-item"><span>✔</span> Summarize PDFs</div>
-            <div class="feature-item"><span>✔</span> Ask Questions</div>
-            <div class="feature-item"><span>✔</span> Concept Breakdown</div>
-            <div class="feature-item"><span>✔</span> YouTube Insights</div>
+            <div class="feature-item">
+                <span class="feature-icon">📄</span>
+                <span class="feature-text">Summarize PDFs</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">▶</span>
+                <span class="feature-text">YouTube Insights</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">❓</span>
+                <span class="feature-text">Ask Questions</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🔍</span>
+                <span class="feature-text">Concept Breakdown</span>
+            </div>
         </section>
-    </main>
 
+    </main>
 </div>
 
 <script src="../static/text_upload.js" type="module"></script>
