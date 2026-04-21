@@ -23,7 +23,7 @@ def response(prompt,chat_history:list):
     
 def session_title(prompt):
     try:
-        TITLE_PROMPT='Generate a short, 4-6 word title for a study session that starts with this message.'
+        TITLE_PROMPT='Generate a short, 4-6 word title for a session that starts with this message.'
 
         title=[{'role':'system','content':TITLE_PROMPT},
                {'role':'user','content':prompt}]
