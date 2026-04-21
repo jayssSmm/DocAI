@@ -66,8 +66,13 @@ aiForm.addEventListener('submit', async (e) => {
         const cleaned = data.message
         .replace(/\n{3,}/g, '\n\n')
         .trim();
-        statusEle.innerHTML = marked.parse(cleaned);
         session_id = data.session_id;
+        if (cleaned.includes("Error")){
+            alert('Lecture too Big');
+            statusEle.textContent='Waiting for your prompt...'
+        }else{
+            statusEle.innerHTML=marked.parse(cleaned)
+        }
     })
     .finally(() => {
       submitBtn.disabled = false;

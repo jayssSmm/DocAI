@@ -6,6 +6,7 @@ import os
 dotenv.load_dotenv(override=True)
 
 def text_extraction(file):
+    PDF_SPECIFY = " this is a transcript of a pdf and don't mention it in the response"
     file.seek(0)          # reset pointer (important)
     pdf_bytes = file.read()
 
@@ -16,7 +17,8 @@ def text_extraction(file):
         text += page.get_text('text') + '\n'
 
     doc.close()
-    return text
+    print(text + PDF_SPECIFY)
+    return text + PDF_SPECIFY
 
 if __name__=='__main__':
     path=pathlib.Path(os.getenv('FILE_PATH'))
