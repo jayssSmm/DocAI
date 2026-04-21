@@ -60,6 +60,7 @@ def upload_files():
  
                 
             redis_pdf.set_cache_file(file,pdf_response)
+            redis_history.set_history(session_id,"user",r)
             redis_history.set_history(session_id,"assistant",pdf_response)
 
             if not is_guest:
