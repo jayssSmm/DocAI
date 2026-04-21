@@ -13,17 +13,17 @@ def set_cache_file(file,response):
 
     hash_file=make_hash_file(file)
 
-    r.hset('cache_history_groq',hash_file,response)
+    r.hset('server_history_groq',hash_file,response)
 
-    if r.ttl('cache_history_groq') == -1:
-        r.expire('cache_history_groq',CACHE_TTL)
+    if r.ttl('server_history_groq') == -1:
+        r.expire('server_history_groq',CACHE_TTL)
 
     return True
 
 def get_cache_file(file):
 
     hash_file=make_hash_file(file)
-    raw = r.hexists('cache_history_groq',hash_file)
+    raw = r.hexists('server_history_groq',hash_file)
     if raw:
-        return r.hget('cache_history_groq',hash_file)
+        return r.hget('server_history_groq',hash_file)
     return None
