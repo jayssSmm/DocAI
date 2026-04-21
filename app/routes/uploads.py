@@ -6,7 +6,7 @@ from app.services.session_cache_services import redis_history
 from app.services.session_services import session_handler,new_session
 from app.services.guest_services import too_many_request
 from app.services.message_services import message_add
-from flask_jwt_extended import jwt_required,get_jwt_identity,verify_jwt_in_request
+from flask_jwt_extended import get_jwt_identity,verify_jwt_in_request
 
 bp=Blueprint("upload",__name__)
 
@@ -45,7 +45,6 @@ def upload_files():
 
         cache_pdf=redis_pdf.get_cache_file(file)
         if cache_pdf:
-            print(session_id)
             return {'message':cache_pdf}
         else:
             r = tpdf.text_extraction(file)
@@ -60,6 +59,7 @@ def upload_files():
  
                 
             redis_pdf.set_cache_file(file,pdf_response)
+            redis_history.set_history(session_id,"user",r)
             redis_history.set_history(session_id,"assistant",pdf_response)
 
             if not is_guest:
